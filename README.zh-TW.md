@@ -12,6 +12,12 @@
 
 # 給真正工程師的 Skills
 
+> **Fork 變更說明（lp1688/skills）**——本 fork 在 [mattpocock/skills](https://github.com/mattpocock/skills) 之上的修改：
+>
+> - `kimi.plugin.json`：本 repo 現在可作為 **Kimi Code plugin** 安裝（`/plugins install https://github.com/lp1688/skills`），收錄 `skills/engineering/` 與 `skills/productivity/` 共 25 個正式 skills。已驗證 skill frontmatter（`name`、`description`、`disable-model-invocation`）與 Kimi Code 的 skill 載入器相容。
+> - `README.zh-TW.md` / `README.zh-CN.md`：本 README 的繁體中文與簡體中文譯本。
+> - `skills-report.html`：涵蓋全部 35 個 skill（engineering / productivity / misc / in-progress 四個 bucket）的中文視覺化分析報告。
+
 [![skills.sh](https://skills.sh/b/mattpocock/skills)](https://skills.sh/mattpocock/skills)
 
 這是我每天用来做真正工程開發的 agent skills——不是 vibe coding。
@@ -44,6 +50,19 @@ claude plugins install mattpocock-skills
 ```
 
 它已在 Claude Code 官方 marketplace 中，不需要先加入任何東西，更新會自動送達。
+
+</details>
+
+<details>
+<summary><strong>Kimi Code</strong></summary>
+
+本 repo 同時也是一個 Kimi Code plugin（見 `kimi.plugin.json`）。在 Kimi Code session 中輸入：
+
+```
+/plugins install https://github.com/lp1688/skills
+```
+
+然後執行 `/reload`（或開新 session）即可啟用。Plugin 收錄 `skills/engineering/` 與 `skills/productivity/` 的正式 skills；可用 `/skill:<名稱>` 手動觸發，或讓模型依情境自動取用。之後可用 `/plugins list`、`/plugins info mattpocock-skills` 或 `/plugins remove mattpocock-skills` 管理。
 
 </details>
 

@@ -12,6 +12,12 @@
 
 **English** | [繁體中文](./README.zh-TW.md) | [简体中文](./README.zh-CN.md)
 
+> **Fork notes (lp1688/skills)** — changes on top of [mattpocock/skills](https://github.com/mattpocock/skills):
+>
+> - `kimi.plugin.json`: this repo is now installable as a **Kimi Code plugin** (`/plugins install https://github.com/lp1688/skills`), shipping the 25 promoted skills from `skills/engineering/` + `skills/productivity/`. Skill frontmatter (`name`, `description`, `disable-model-invocation`) was verified compatible with Kimi Code's skill loader.
+> - `README.zh-TW.md` / `README.zh-CN.md`: Traditional and Simplified Chinese translations of this README.
+> - `skills-report.html`: a Chinese-language visual report covering all 35 skills across every bucket (engineering / productivity / misc / in-progress).
+
 [![skills.sh](https://skills.sh/b/mattpocock/skills)](https://skills.sh/mattpocock/skills)
 
 My agent skills that I use every day to do real engineering - not vibe coding.
@@ -44,6 +50,19 @@ Or, from inside a session:
 ```
 
 It's in Claude Code's official marketplace, so there's nothing to add first, and updates arrive automatically.
+
+</details>
+
+<details>
+<summary><strong>Kimi Code</strong></summary>
+
+This repo is also a Kimi Code plugin (see `kimi.plugin.json`). In a Kimi Code session:
+
+```
+/plugins install https://github.com/lp1688/skills
+```
+
+Then run `/reload` (or start a new session) to activate it. The plugin ships the promoted skills from `skills/engineering/` and `skills/productivity/`; invoke them with `/skill:<name>` or let the model pick them up automatically. Manage it anytime via `/plugins list`, `/plugins info mattpocock-skills`, or `/plugins remove mattpocock-skills`.
 
 </details>
 
