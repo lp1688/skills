@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mattpocock/skills — 全技能說明報告</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #1a1d24;
+    --card-hover: #20242e;
+    --text: #e8eaf0;
+    --muted: #9aa3b2;
+    --accent: #7c9eff;
+    --user-badge: #f6a35c;
+    --model-badge: #6fd3a7;
+    --border: #2a2f3a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", "Microsoft JhengHei", -apple-system, sans-serif;
+    line-height: 1.75;
+    padding: 40px 20px 80px;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 48px; }
+  header h1 { font-size: 2rem; margin-bottom: 8px; }
+  header p { color: var(--muted); }
+  header .meta { margin-top: 12px; font-size: 0.85rem; color: var(--muted); }
+  header .meta code { background: var(--card); padding: 2px 8px; border-radius: 4px; }
+  .legend {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    margin: 20px 0 40px; font-size: 0.85rem; color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot.user { background: var(--user-badge); }
+  .dot.model { background: var(--model-badge); }
+
+  .bucket { margin-bottom: 56px; }
+  .bucket > h2 {
+    font-size: 1.5rem; padding-bottom: 10px; margin-bottom: 6px;
+    border-bottom: 2px solid var(--accent);
+  }
+  .bucket > .bucket-desc { color: var(--muted); margin-bottom: 24px; font-size: 0.95rem; }
+
+  details.skill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  details.skill[open] { background: var(--card-hover); }
+  summary {
+    cursor: pointer; list-style: none;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "▸"; margin-left: auto; color: var(--muted);
+    transition: transform 0.15s;
+  }
+  details[open] summary::after { transform: rotate(90deg); }
+  summary .name {
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: 1.05rem; font-weight: 600; color: var(--accent);
+  }
+  summary .tagline { color: var(--muted); font-size: 0.9rem; flex-basis: 100%; }
+  .badge {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+    padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+  }
+  .badge.user { background: rgba(246,163,92,0.15); color: var(--user-badge); border: 1px solid rgba(246,163,92,0.4); }
+  .badge.model { background: rgba(111,211,167,0.12); color: var(--model-badge); border: 1px solid rgba(111,211,167,0.4); }
+  .body { padding: 4px 20px 20px 20px; border-top: 1px solid var(--border); }
+  .body h4 {
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent); margin: 16px 0 6px;
+  }
+  .body p { color: var(--text); font-size: 0.95rem; }
+  .body ul { padding-left: 20px; font-size: 0.92rem; }
+  .body li { margin-bottom: 4px; color: var(--text); }
+  .body code { background: rgba(124,158,255,0.12); color: var(--accent); padding: 1px 6px; border-radius: 4px; font-size: 0.88em; }
+  .note {
+    margin-top: 10px; padding: 10px 14px; font-size: 0.88rem;
+    background: rgba(124,158,255,0.07); border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0; color: var(--muted);
+  }
+  footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 60px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>mattpocock/skills 全技能說明報告</h1>
+  <p>Matt Pocock 的 Claude Code skills 倉庫 — 共 35 個 skill，依 bucket 分類</p>
+  <div class="meta">
+    來源：<code>https://github.com/lp1688/skills</code>（fork of mattpocock/skills）
+  </div>
+  <div class="legend">
+    <span><i class="dot user"></i>User-invoked：只能使用者手動觸發（如 <code>/grill-me</code>）</span>
+    <span><i class="dot model"></i>Model-invoked：模型可依情境自動觸發，使用者也可手動觸發</span>
+  </div>
+</header>
+
+<!-- ==================== ENGINEERING ==================== -->
+<section class="bucket">
+  <h2>engineering（18 個）</h2>
+  <p class="bucket-desc">日常寫程式使用的 skills。串成一條主流程：<code>/grill-with-docs</code> 磨利想法 → 需要時繞道 <code>/prototype</code> → 大工作走 <code>/to-spec</code> → <code>/to-tickets</code> → 每張 ticket 用 <code>/implement</code>（內部驅動 <code>/tdd</code>，收尾跑 <code>/code-review</code>）。</p>
+
+  <details class="skill">
+    <summary><span class="name">ask-matt</span><span class="badge user">USER-INVOKED</span><span class="tagline">整個倉庫的路由器：告訴你該用哪個 skill / flow</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>當使用者不確定該用哪個 skill 或流程時，ask-matt 提供一張完整的地圖：主流程（idea → ship）、入口流程（on-ramps）、獨立工具，以及各階段之間如何銜接。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想問「我的情況該用哪個 skill / flow」時手動觸發。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>定義主流程：<code>/grill-with-docs</code> → 繞道 <code>/prototype</code> → <code>/to-spec</code> → <code>/to-tickets</code> → <code>/implement</code> → <code>/code-review</code>。</li>
+        <li>強調 context hygiene：注意約 150k tokens 的「smart zone」上限，必要時在階段邊界 <code>/compact</code>。</li>
+        <li>On-ramps：issue 堆積走 <code>/triage</code>；東西壞了走 <code>/diagnosing-bugs</code>；超大模糊工程走 <code>/wayfinder</code>。</li>
+        <li>附 <code>PHASE-BOUNDARIES.md</code>：定義階段邊界處五個選項（Continue、<code>/clear</code>、<code>/handoff</code>、Subagent、<code>/compact</code>）的決策樹。</li>
+      </ul>
+      <div class="note">明確指出 <code>/setup-matt-pocock-skills</code> 是使用其他 engineering skills 的前置條件。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">code-review</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">對 diff 做「標準 + 規格」雙軸審查</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>對「某固定點以來的 diff」做雙軸審查：Standards（是否符合 repo 編碼標準，外加固定的 Fowler 壞味道基線）與 Spec（是否忠實實作原始 issue/spec）。兩軸以併行 sub-agents 執行，結果並列呈現、互不排名。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想審查 branch、PR、進行中的修改，或說「review since X」；也是 <code>/implement</code> 的收尾步驟。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>先釘住 fixed point（<code>git diff &lt;point&gt;...HEAD</code> 三點式），spawn sub-agents 之前先驗證 ref 存在且 diff 非空。</li>
+        <li>依序找 spec 來源（commit 訊息 → 使用者給的路徑 → <code>docs/</code>/<code>specs/</code>/<code>.scratch/</code> → 問使用者）與 standards 來源。</li>
+        <li>Standards 軸永遠帶 12 個 Fowler 壞味道基線；repo 明文標準優先，工具已強制執行的直接跳過。</li>
+        <li>兩個 sub-agents 併行，聚合時不合併、不重排名，只各軸總結最嚴重問題。</li>
+      </ul>
+      <div class="note">分開兩軸是為了防止「全守規矩但做錯事」或「做對事但壞了慣例」被互相掩蓋。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">codebase-design</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">deep modules 設計的共享詞彙與原則參考</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>設計「deep modules」的共享詞彙與原則參考：module、interface、depth、seam、adapter、leverage、locality。目標是大量行為藏在小介面後面、位於乾淨的 seam 上、可透過介面測試。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想設計或改善模組介面、找 deepening 機會、決定 seam 位置；或另一個 skill 需要這套詞彙時（<code>/tdd</code>、<code>/improve-codebase-architecture</code> 都說這套語言）。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>嚴格詞彙表，明確禁用 component/service/API/boundary 等替代詞。</li>
+        <li>核心原則：depth 是介面的屬性而非實作；deletion test；介面即測試面；一個 adapter = 假想的 seam，兩個才是真的。</li>
+        <li>可測性設計三招：接受依賴而非自行建立、回傳結果而非副作用、小表面積。</li>
+        <li>附 <code>DEEPENING.md</code> 與 <code>DESIGN-IT-TWICE.md</code>（併行 sub-agents 以數種截然不同的方式設計介面再比較）。</li>
+      </ul>
+      <div class="note">明確拒絕 Ousterhout 的「實作行數/介面行數比」定義，改用 depth-as-leverage；這是參考文件而非要跑的 session。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">diagnosing-bugs</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">難 bug 與效能退化的紀律化診斷迴圈</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>核心信念：先有「一條已跑過、能對這個 bug 變紅的緊密 feedback loop」，之後的一切（最小化、假設、插樁、修復、回歸測試）都是機械操作。</p>
+      <h4>觸發時機</h4>
+      <p>使用者說「diagnose / debug this」，或回報東西壞了、throwing、failing、變慢。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>Phase 1 建 feedback loop（skill 本體）：依序嘗試失敗測試、curl 腳本、CLI fixture、headless browser、bisection、differential loop 等，沒有 red-capable 指令就不准進 Phase 2。</li>
+        <li>Phase 2 重現 + 最小化；Phase 3 先列 3–5 個可證偽的排序假設再測；Phase 4 一次只改一個變數插樁，debug log 加 <code>[DEBUG-xxxx]</code> 前綴。</li>
+        <li>Phase 5 先寫回歸測試再修——但只在有「正確 seam」時；沒有正確 seam 本身就是架構發現。</li>
+        <li>Phase 6 清理插樁、寫 post-mortem，必要時移交 <code>/improve-codebase-architecture</code>。</li>
+        <li>全程必須 redact 秘密（<code>&lt;REDACTED&gt;</code>）。</li>
+      </ul>
+      <div class="note">明確禁止「還沒有 loop 就讀程式建立理論」——這正是本 skill 要防的失敗模式。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">domain-modeling</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">建立並磨利領域模型，即時維護 CONTEXT.md 與 ADR</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>主動建立並磨利專案的領域模型：挑戰模糊術語、用具體情境壓力測試概念邊界、與程式碼交叉核對，並在術語確定的當下即時更新 <code>CONTEXT.md</code>（glossary）與 ADR。</p>
+      <h4>觸發時機</h4>
+      <p>討論 codebase 術語、撰寫/編輯 <code>CONTEXT.md</code>、記錄或編輯 ADR 時；也被 <code>/grill-with-docs</code>、<code>/triage</code>、<code>/wayfinder</code>、<code>/improve-codebase-architecture</code> 內部驅動。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>檔案布局：單 context 用根目錄 <code>CONTEXT.md</code> + <code>docs/adr/</code>；多 context 用 <code>CONTEXT-MAP.md</code>；檔案 lazy 建立。</li>
+        <li>四個 session 中的動作：挑戰衝突用法、sharpen 模糊詞、發明邊界情境壓力測試、與程式碼交叉核對。</li>
+        <li>術語一解決就更新 <code>CONTEXT.md</code>，不批次累積；<code>CONTEXT.md</code> 只能是 glossary，嚴禁實作細節。</li>
+        <li>ADR 要節制：同時滿足「難以逆轉」「沒上下文會讓人困惑」「是真正的 trade-off」三條件才提議。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">grill-with-docs</span><span class="badge user">USER-INVOKED</span><span class="tagline">主流程第一步：無情訪談磨利想法，同時把知識寫成文件</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>以無情的訪談（grilling）磨利一個計畫或設計，同時把過程中產生的領域知識寫成文件（glossary、ADR）。SKILL.md 本身只有一行程式：執行 <code>/grilling</code> session 並使用 <code>/domain-modeling</code> skill——是兩個底層 skill 的有狀態包裝。</p>
+      <h4>觸發時機</h4>
+      <p>在 working directory（有 repo）裡想釐清一個想法、計畫或設計時。若不在 repo 中則改用無狀態的 <code>/grill-me</code>。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>底層執行 <code>/grilling</code>：以 design tree + rounds + frontier 的方式逐輪提問。</li>
+        <li>同時驅動 <code>/domain-modeling</code>：把訪談中確定的術語即時寫進 <code>CONTEXT.md</code>，重要決策記為 ADR。</li>
+        <li>與 <code>/grill-me</code> 的差異在於「留下紙本紀錄」——在有 repo 時它是嚴格較優的選擇。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">implement</span><span class="badge user">USER-INVOKED</span><span class="tagline">依 spec / tickets 把功能建出來的標準建置迴圈</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>依據 spec 或一組 tickets 實際把功能建出來。內部在預先約定的 seams 驅動 <code>/tdd</code>，收尾跑 <code>/code-review</code>，最後 commit 到當前分支。</p>
+      <h4>觸發時機</h4>
+      <p>拿到 spec/ticket 後手動觸發；每張 ticket 通常開一個 fresh session 各自執行。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>盡可能用 <code>/tdd</code>、在 pre-agreed seams 上測試先行。</li>
+        <li>定期跑 typechecking 與單一測試檔，完整測試套件只在最後跑一次。</li>
+        <li>完成後用 <code>/code-review</code> 做雙軸審查再 commit。</li>
+      </ul>
+      <div class="note">刻意極簡（SKILL.md 僅 15 行）——只是把 tdd、code-review、commit 串成一個標準建置迴圈的薄編排層。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">improve-codebase-architecture</span><span class="badge user">USER-INVOKED</span><span class="tagline">掃描程式庫找出 deepening opportunities，產出視覺化 HTML 報告</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>掃描程式庫找出「deepening opportunities」——把 shallow module 加深為 deep module 的重構候選，以視覺化 HTML 報告呈現，使用者挑一個後進入 grilling 迴圈討論。目標是 testability 與 AI-navigability。</p>
+      <h4>觸發時機</h4>
+      <p>有空檔想改善程式庫架構健康時手動觸發；也是 <code>/diagnosing-bugs</code> post-mortem 發現「沒有好的 seam 可以鎖住 bug」時的移交對象。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>先定範圍再掃描（YAGNI）：優先看近期 commit 熱點；先讀 <code>CONTEXT.md</code> 與相關 ADR。</li>
+        <li>spawn sub-agent 有機探索，尋找 shallow module、缺乏 locality 的純函式、跨 seam 洩漏的耦合等。</li>
+        <li>產出自包含 HTML 報告（Tailwind + Mermaid via CDN），每個候選有 before/after 圖、Strong/Worth exploring/Speculative 徽章與 Top recommendation。</li>
+        <li>使用者挑選後跑 <code>/grilling</code> 走決策樹，過程中用 <code>/domain-modeling</code> 即時更新 <code>CONTEXT.md</code>/ADR。</li>
+      </ul>
+      <div class="note">只提出候選、不直接設計介面；候選若抵觸現有 ADR 要明確標示「值得重開」而非默默列出。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">prototype</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">用 throwaway code 回答一個設計問題</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>用 throwaway code 回答一個設計問題：邏輯/狀態模型問題產出一個可分享、非工程師也能操作的單一 HTML 檔；UI 問題產出同一路由上多個可用 URL 參數切換的候選版本。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想 sanity-check 狀態模型或邏輯「感覺對不對」、或探索 UI 該長什麼樣；也是主流程 step 2 的繞道。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>先分流：「邏輯/狀態對嗎」→ <code>LOGIC.md</code>；「該長什麼樣」→ <code>UI.md</code>。分流錯誤等於浪費整個 prototype。</li>
+        <li>共同規則：throwaway 且明確標記、放在將來真正使用的程式碼附近；一條指令即可啟動；預設無持久化；不寫測試不做 polish。</li>
+        <li>完成後把驗證過的決策折回正式程式碼，prototype 本體作為 primary source commit 到 <code>prototype/&lt;name&gt;</code> 分支（不進 main）。</li>
+      </ul>
+      <div class="note">「Throwaway」是對寫法的約束，不是一定要銷毀——答案是資產，prototype 本體留作可引用的決策證據。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">research</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">把閱讀型調查委派給背景 agent，產出附引用的 Markdown</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>針對一個問題查高信任度的 primary sources（官方文件、原始碼、規格、first-party API），產出一份附引用的 Markdown 檔存進 repo，主線工作可以繼續。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想研究某主題、蒐集文件或 API 事實、或把閱讀雜務交給背景 agent。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>以背景 agent 執行，使用者同時繼續手邊工作。</li>
+        <li>每個 claim 都追溯到擁有它的源頭，不用二手轉述；逐條引用來源。</li>
+        <li>產出單一 Markdown 檔，放在 repo 既有慣例的位置。</li>
+      </ul>
+      <div class="note">產出的文件是拿進主流程 <code>/grill-with-docs</code> 的素材——research 餵養思考，不取代思考；也是 wayfinder research ticket 的解析引擎。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">resolving-merge-conflicts</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">以「原始意圖」逐 hunk 解決 merge / rebase 衝突</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>處理進行中的 git merge 或 rebase 衝突：逐 hunk 解決，方法是追溯衝突雙方的「原始意圖」（commit message、PR、原始 issue），而非挑行保留；最後完成整個合併操作，永不 <code>--abort</code>。</p>
+      <h4>觸發時機</h4>
+      <p>已經處於 merge/rebase 衝突中時使用。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>先看當前合併狀態、git 歷史與衝突檔案。</li>
+        <li>為每個衝突找 primary sources，理解雙方各自的原始意圖。</li>
+        <li>逐 hunk 解決：盡量保留雙方意圖；不相容時選符合合併既定目標的一方並記錄取捨；不發明新行為。</li>
+        <li>找出專案的自動化檢查（typecheck → tests → format）並跑完修好，然後 stage、commit、continue 到底。</li>
+      </ul>
+      <div class="note">獨立於所有流程之外；核心原則是「by intent, not by picking lines」。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">setup-matt-pocock-skills</span><span class="badge user">USER-INVOKED</span><span class="tagline">每個 repo 跑一次的前置設定（tracker、標籤、domain 文件布局）</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>為其他 engineering skills 建立三項配置：issue tracker（GitHub/GitLab/local markdown/其他）、triage 標籤字彙、domain 文件布局（<code>CONTEXT.md</code> 與 ADR 放哪、怎麼讀）。</p>
+      <h4>觸發時機</h4>
+      <p>第一次使用 engineering skills 前手動執行；其他 skill 偵測到 <code>docs/agents/issue-tracker.md</code> 不存在時會提示使用者回來跑它。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>是「prompt-driven skill」而非腳本：先探索（git remote、<code>CLAUDE.md</code>/<code>AGENTS.md</code>、monorepo 訊號等）→ 呈現發現 → 逐節確認 → 才寫入。</li>
+        <li>產出 <code>docs/agents/issue-tracker.md</code>、<code>docs/agents/triage-labels.md</code>、<code>docs/agents/domain.md</code>，並在既有的 <code>CLAUDE.md</code> 或 <code>AGENTS.md</code> 加入 <code>## Agent skills</code> 區塊。</li>
+        <li>每節都帶推薦答案讓使用者一句話接受；探索已能決定的節直接跳過。</li>
+      </ul>
+      <div class="note">絕不複製或另建 <code>AGENTS.md</code>/<code>CLAUDE.md</code>；已存在的 <code>## Agent skills</code> 區塊就地更新而非重複附加。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">tdd</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">測試驅動開發的參考紀律：紅→綠迴圈與 seam 選擇</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>測試驅動開發的參考紀律：紅→綠迴圈、什麼是好測試、測試該落在哪些 seam、反模式清單。讓 red-green 迴圈產出「值得留的測試」，以垂直切片一次建一個行為。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想 test-first 建功能或修 bug、提到「red-green-refactor」或整合測試；也被 <code>/implement</code> 內部驅動。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>只在 pre-agreed seams 寫測試——動手前先寫下要測的 seams 並與使用者確認。</li>
+        <li>三大反模式：implementation-coupled（重構就壞）、tautological（斷言與實作同源）、horizontal slicing；改用垂直切片：一個測試 → 一個實作 → 重複（tracer bullet）。</li>
+        <li>迴圈規則：red before green、一次一片、refactor 不屬於迴圈（留給 code-review 階段）。</li>
+        <li>附 <code>tests.md</code>（範例）與 <code>mocking.md</code>（mock 準則）。</li>
+      </ul>
+      <div class="note">測試讀起來要像規格、跨過 public interface 驗證行為，重構後不該需要改測試。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">to-spec</span><span class="badge user">USER-INVOKED</span><span class="tagline">把對話內容綜合成 spec 並發佈到 issue tracker（不訪談）</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把目前的對話內容直接綜合成一份 spec 並發佈到 issue tracker——明確「不訪談」，只整理已討論過的東西。產出的 spec 會標上 <code>ready-for-agent</code> 標籤，不再需要分診。</p>
+      <h4>觸發時機</h4>
+      <p>多 session 的建置工作，在 grilling 完、想法已清晰之後手動觸發，作為 <code>/to-tickets</code> 的前一步。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>先探索 repo，全程使用 <code>CONTEXT.md</code> 的領域詞彙並尊重相關 ADR。</li>
+        <li>先草擬測試 seams（優先重用既有 seam、盡量用最高層 seam、理想數量是一個），並與使用者確認。</li>
+        <li>依固定模板寫 spec：Problem Statement、Solution、User Stories、Implementation Decisions、Testing Decisions、Out of Scope、Further Notes。</li>
+        <li>不含檔案路徑與程式碼片段（會過時）。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">to-tickets</span><span class="badge user">USER-INVOKED</span><span class="tagline">把 spec 拆成 tracer-bullet 垂直切片 tickets</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把計畫、spec 或對話拆成一組「tracer-bullet」垂直切片 ticket，每張宣告自己的 blocking edges（被哪些 ticket 擋住），發佈到已設定的 tracker。</p>
+      <h4>觸發時機</h4>
+      <p>spec 完成後、要拆成可逐張執行的工作單時手動觸發。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>每張 ticket 是窄而完整的垂直切片（schema、API、UI、tests 全切過），單獨可 demo、大小以一個 fresh context window 能裝下為準。</li>
+        <li>每張宣告 blocking edges；無 blocker 的立即可做，依「frontier」推進。</li>
+        <li>Wide refactor（blast radius 遍及全庫）是垂直切片的例外，改用 expand–contract 序列。</li>
+        <li>先把拆分方案以編號清單「quiz」使用者，迭代到批准才發佈；發佈時套用 <code>ready-for-agent</code> 標籤。</li>
+      </ul>
+      <div class="note">「Make the change easy, then make the easy change」——先找 prefactor 機會；每張 ticket 自包含，做完即可丟棄其 context。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">triage</span><span class="badge user">USER-INVOKED</span><span class="tagline">把 issue tracker 的進件推進小型狀態機，產出 agent-ready 任務簡報</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把 issue tracker 上的 issue（以及被視為請求管道的外部 PR）推進一個小型狀態機：分類、驗證、必要時 grilling、產出 agent-ready 的任務簡報（agent brief）。只處理「不是你建立的」原始進件。</p>
+      <h4>觸發時機</h4>
+      <p>維護者手動執行 <code>/triage</code>，用自然語言下指令，如「show me anything that needs my attention」、「move #42 to ready-for-agent」。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>兩個 category 角色（<code>bug</code>、<code>enhancement</code>）+ 五個 state 角色（<code>needs-triage</code>、<code>needs-info</code>、<code>ready-for-agent</code>、<code>ready-for-human</code>、<code>wontfix</code>）。</li>
+        <li>每則貼到 tracker 的留言必須以 <code>&gt; *This was generated by AI during triage.*</code> 開頭。</li>
+        <li>分診時做兩項 codebase 檢查：redundancy（是否已實作）與 prior rejection（查 <code>.out-of-scope/</code> 知識庫）。</li>
+        <li>先驗證主張（重現 bug、checkout PR 跑測試）再 grilling；被拒絕的 enhancement 寫入 <code>.out-of-scope/</code> 知識庫。</li>
+      </ul>
+      <div class="note"><code>/to-tickets</code> 產生的 ticket 已是 agent-ready，不要再分診；標籤字串可透過 <code>/setup-matt-pocock-skills</code> 客製對應。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">wayfinder</span><span class="badge user">USER-INVOKED</span><span class="tagline">為超大模糊工程在 issue tracker 上畫出一張共享決策地圖</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>為「大到一個 agent session 裝不下、且路徑還埋在霧裡」的工程（greenfield 專案、巨大 feature）在 issue tracker 上畫出一張共享地圖：地圖是一個 issue，下面的「decision tickets」一張一張解決，直到通往目的地的路清晰為止。產出的是決策而非交付物。</p>
+      <h4>觸發時機</h4>
+      <p>面對超大、模糊、跨多 session 的工作時手動觸發；範圍明確的 feature 不該用它（太慢太重）。地圖清空後移交給 <code>/to-spec</code> 走主流程。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>地圖 = 一個標記 <code>wayfinder:map</code> 的 issue，內含 Destination、Notes、Decisions so far、Not yet specified（fog of war）、Out of scope。</li>
+        <li>Ticket 分四型：research（AFK）、prototype、grilling、task；分 HITL 與 AFK，claim 方式是 assign 給自己。</li>
+        <li>用 tracker 原生 blocking 關係渲染 frontier（open + unblocked + unclaimed）。</li>
+        <li>兩種模式：Chart the map（命名目的地 → 廣度優先 grilling 畫霧 → 建地圖與 tickets）與 Work through the map（每 session 只解一張 ticket）。</li>
+      </ul>
+      <div class="note">「Plan, don't do」——想直接動手做通常代表已到地圖邊界、該移交了；地圖刻意不完整（fog of war）。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">wizard</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">產生互動式 bash wizard，帶人類完成只有人能做的程序</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>產生一支互動式 bash wizard，一步一步帶著人類完成只有人能做的程序：開通基礎設施、設定憑證或 CI secrets、操作陌生的第三方 dashboard、執行一次性 migration/cutover。它負責開 URL、說明點哪裡、捕捉值、寫進 <code>.env</code> 和 GitHub secrets。</p>
+      <h4>觸發時機</h4>
+      <p>agent 撞到只有人類能過的牆時自動取用；明確禁止用於 agent 自己能做的步驟。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>UX 已由 <code>template.sh</code> 解決（分段進度、確認閘門、跨平台開 URL 含 WSL、隱藏式密碼輸入、冪等 <code>.env</code> upsert、<code>gh secret</code> 寫入）。</li>
+        <li>流程：先讀 repo 盤點所有人工作步驟 → 與使用者確認 stage 清單 → 把每個 stage 的具體路徑寫清楚，不知道就問，絕不編造。</li>
+        <li>驗收：<code>bash -n</code>、有 shellcheck 就跑、<code>chmod +x</code>；不自己端到端執行，改以靜態追蹤核對每個值的去向。</li>
+        <li>預設一次性：放 scratch 或 <code>scripts/</code>，用完即刪。</li>
+      </ul>
+      <div class="note">把「每次都要重新解釋給 AI 聽的人工流程」固化成腳本；<code>confirm</code> 必須出現在任何不可逆操作之前。</div>
+    </div>
+  </details>
+</section>
+
+<!-- ==================== PRODUCTIVITY ==================== -->
+<section class="bucket">
+  <h2>productivity（7 個）</h2>
+  <p class="bucket-desc">一般工作流程工具，非程式碼專屬。</p>
+
+  <details class="skill">
+    <summary><span class="name">grill-me</span><span class="badge user">USER-INVOKED</span><span class="tagline">手動發起一場毫不留情的訪談（grilling 的手動別名）</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>一個極薄的「手動入口」skill，讓使用者主動發起一場毫不留情的訪談，把自己的計畫或設計徹底打磨。全部內容只有一行：執行一場 <code>/grilling</code> session。</p>
+      <h4>觸發時機</h4>
+      <p>使用者手動輸入 <code>/grill-me</code>，想被拷問自己的計畫或設計時。</p>
+      <div class="note">體現「invocation 分層」設計——同一行為同時提供模型自動觸發版（grilling）與純手動版（grill-me）。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">grilling</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">以 design tree 系統性地無情訪談使用者的計畫或決策</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>對使用者的計畫、決策或想法進行無情的訪談，直到雙方達成共享理解。把決策空間建模為一棵 design tree，系統性地走訪每個分支，確保沒有任何假設被默默略過。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想壓力測試自己的思考，或使用任何含 'grill' 的觸發詞時。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>以 rounds 推進：每回合問出整個 frontier——所有前置條件已確定、現在就能問的決策。</li>
+        <li>固定格式：每題編號（❓ Q1…）並附上 agent 的推薦答案（➡️），讓使用者可以快速確認。</li>
+        <li>查事實是 agent 的責任：需要環境資訊時派 sub-agent 去查，不能問使用者。</li>
+        <li>結束條件：frontier 清空；且在使用者確認達成共識前不得動手執行。</li>
+      </ul>
+      <div class="note">「決策屬於使用者，事實屬於 agent」的分工很明確。這是 <code>/grill-with-docs</code>、<code>/triage</code>、<code>/wayfinder</code> 等共用的底層 primitive。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">handoff</span><span class="badge user">USER-INVOKED</span><span class="tagline">把當前對話壓縮成交接文件，讓新 agent 接手</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把當前對話壓縮成一份 handoff 文件，讓另一個全新的 agent 能接手繼續工作。解決長對話後要換 session/agent 時上下文遺失的問題。</p>
+      <h4>觸發時機</h4>
+      <p>使用者手動輸入，打算結束當前 session、由新 agent 接續時。參數：下一個 session 的焦點描述。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>文件存到 OS 暫存目錄，不存進當前 workspace（不污染專案）。</li>
+        <li>必含「suggested skills」區段，建議接手 agent 應調用哪些 skill。</li>
+        <li>不重複已在其他產出物（specs、plans、ADRs、issues、commits、diffs）中的內容，改用路徑或 URL 引用。</li>
+        <li>必須遮蔽敏感資訊（API keys、密碼、個資）。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">teach</span><span class="badge user">USER-INVOKED</span><span class="tagline">把當前目錄變成有狀態的教學 workspace，跨 session 教你學會一項技能</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把當前目錄變成一個有狀態的「教學 workspace」，跨多個 session 教使用者學會一項新技能或概念。productivity 中最龐大的 skill，內建完整的學習科學哲學。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想長期學習某主題（不限程式——例子涵蓋理論物理、瑜珈、健身），手動啟動。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>Workspace 狀態檔：<code>MISSION.md</code>（學習動機錨點）、<code>RESOURCES.md</code>、<code>learning-records/*.md</code>、<code>lessons/*.html</code>、<code>assets/*</code>、<code>NOTES.md</code>。</li>
+        <li>學習三支柱：Knowledge（來自高信任資源，「永不相信 parametric knowledge」）、Skills（互動課程習得）、Wisdom（來自真實社群互動）。</li>
+        <li>用 retrieval practice、spacing、interleaving 等「desirable difficulty」設計課程。</li>
+        <li>每堂課是自包含 HTML、短小可快速完成、位於使用者的 zone of proximal development、附引用來源。</li>
+        <li>元件重用是預設；測驗選項字數必須一致，避免格式洩漏答案。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">to-questionnaire</span><span class="badge user">USER-INVOKED</span><span class="tagline">把你答不出的決策轉化成問卷，交給知道答案的人填</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把一個使用者自己無法回答的決策，轉化成一份 Markdown 問卷，交給「唯一知道答案的人」非同步填寫，或在會議中一起填。核心是把知識從持有者腦中萃取出來。</p>
+      <h4>觸發時機</h4>
+      <p>使用者面臨需要他人（同事、專家、stakeholder）知識才能決定的問題時手動啟動。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>核心口訣：「Grill the send, not the subject」——只訪談使用者關於「寄送」本身（寄給誰、需要拿回什麼）。</li>
+        <li>三步驟：確認收件人 → 確認需要拿回什麼 → 撰寫問卷，存為 <code>to-questionnaire-&lt;slug&gt;.md</code>。</li>
+        <li>固定模板：Purpose / From-To / Context / How to answer / 主題分節 /「Anything else?」收尾。</li>
+        <li>問題依重要性排序、每題只問一件事、附 answer stub 與必要的「why this matters」一行說明。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">wait-what</span><span class="badge user">USER-INVOKED</span><span class="tagline">看不懂 agent 剛才說的話？緊急煞車，白話重講</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>當 agent 上一則訊息「沒有落地」、使用者看不懂時的緊急煞車。讓 agent 用白話英文重新解釋，補上使用者缺少的上下文。</p>
+      <h4>觸發時機</h4>
+      <p>使用者對 agent 的輸出感到困惑的當下，手動輸入 <code>/wait-what</code>。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>要求 agent 重新表述（re-pitch）剛才的內容，並提供一點上下文背景。</li>
+        <li>使用 ASD-STE100 Simplified Technical English（航空業簡化技術英文標準）。</li>
+        <li>使用 <code>CONTEXT.md</code> 中的 ubiquitous language（專案統一術語）。</li>
+      </ul>
+      <div class="note">極簡的單用途 skill（僅 3 行指令），把「我沒看懂，重講」變成一個帶明確規格的快捷鍵。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">writing-for-agents</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">撰寫「給 agent 看的文件」的方法論參考指南</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>撰寫「給 agent 看的文件」的參考指南——涵蓋 skills、<code>AGENTS.md</code>/<code>CLAUDE.md</code>、以及任何經由 pointer 觸達的文件。目標是讓 agent 的行為可預測：每次執行走同樣的 process，而非產生同樣的輸出。</p>
+      <h4>觸發時機</h4>
+      <p>建立或編輯 skills、修改 <code>AGENTS.md</code> 或 <code>CLAUDE.md</code> 時。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>Context pointers：pointer 的「措辭」決定 agent 何時觸達材料；弱措辭的 pointer 是 variance bug。</li>
+        <li>兩種負載：context load vs cognitive load（人腦記住哪些文件存在的成本，不該一味最小化）。</li>
+        <li>Information hierarchy：in-file step → in-file reference → disclosed reference；progressive disclosure 與 co-location 是核心手法。</li>
+        <li>Completion criteria 要清晰且有要求度；Leading words 借用 pretraining 已有概念詞錨定行為；避免 negation（要寫正向指令）。</li>
+        <li>Pruning：single source of truth、環境即 source of truth、逐句檢查 relevance。</li>
+      </ul>
+      <div class="note">整個倉庫的「寫作方法論」核心文件，附 <code>SKILL-MECHANICS.md</code> 補充 skill 專屬議題（model-invoked vs user-invoked 的取捨、何時拆分 skill、router skills 模式）。</div>
+    </div>
+  </details>
+</section>
+
+<!-- ==================== MISC ==================== -->
+<section class="bucket">
+  <h2>misc（4 個）</h2>
+  <p class="bucket-desc">留著但很少用的工具，未在 plugin 中推廣。全部為 model-invoked。</p>
+
+  <details class="skill">
+    <summary><span class="name">git-guardrails-claude-code</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">用 PreToolUse hook 攔截危險 git 指令</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>幫使用者在 Claude Code 中設定 <code>PreToolUse</code> hook，在危險的 git 指令（<code>git push</code>、<code>git reset --hard</code>、<code>git clean -f</code> 等）執行之前就攔截阻擋，防止 AI agent 擅自執行破壞性 git 操作。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想防止破壞性 git 操作、加裝 git 安全 hook、或封鎖 <code>git push</code>/<code>git reset</code> 時。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>阻擋清單：<code>git push</code>（含 <code>--force</code>）、<code>git reset --hard</code>、<code>git clean -f/-fd</code>、<code>git branch -D</code>、<code>git checkout .</code> 等。</li>
+        <li>先問 scope：僅本專案（<code>.claude/settings.json</code>）或全域（<code>~/.claude/settings.json</code>）。</li>
+        <li>複製內附腳本 <code>scripts/block-dangerous-git.sh</code> 並在 settings 的 <code>hooks.PreToolUse</code> 註冊；已有設定時 merge 而非覆蓋。</li>
+        <li>用 <code>echo '{"tool_input":...}' | script</code> 驗證應 exit code 2 並輸出 BLOCKED（腳本依賴 <code>jq</code>）。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">migrate-to-shoehorn</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">把測試中的 as 型別斷言遷移到 @total-typescript/shoehorn</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把測試檔中的 <code>as</code> 型別斷言遷移到 <code>@total-typescript/shoehorn</code>（<code>fromPartial()</code>/<code>fromAny()</code>/<code>fromExact()</code>），讓測試可以只傳 partial 資料又保持 TypeScript 型別安全。</p>
+      <h4>觸發時機</h4>
+      <p>使用者提到 shoehorn、想移除測試中的 <code>as</code>、或需要 partial 測試資料時。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>安裝 <code>npm i @total-typescript/shoehorn</code>；用 grep 找出測試檔中的 <code>as</code> 斷言。</li>
+        <li>遷移對照：<code>as Type</code> → <code>fromPartial()</code>；<code>as unknown as Type</code> → <code>fromAny()</code>；<code>fromExact()</code> 用來強制完整物件。</li>
+        <li>遷移前先向使用者確認需求，最後跑 type check 驗證。</li>
+      </ul>
+      <div class="note">明確強調只限測試程式碼，production code 絕對不要用 shoehorn。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">scaffold-exercises</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">為 ai-hero 課程 repo 批次建立 exercise 目錄骨架</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>為 Matt 的課程 repo（ai-hero 系列）批次建立 exercise 目錄結構骨架——包含 sections、problems、solutions、explainers——並確保通過 <code>pnpm ai-hero-cli internal lint</code>。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想 scaffold exercises、建立 exercise stubs、或新增課程 section 時。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>命名規範：section 為 <code>XX-section-name/</code>，exercise 為 <code>XX.YY-exercise-name/</code>，全部 dash-case。</li>
+        <li>每個 exercise 至少有一個子目錄：<code>problem/</code>、<code>solution/</code>、<code>explainer/</code>；每個子目錄需要非空、無壞連結的 <code>readme.md</code>。</li>
+        <li>流程：解析 plan → 建目錄 → 建 readme stub → 跑 lint → 修到通過。</li>
+        <li>搬移/重編號用 <code>git mv</code> 保留歷史。</li>
+      </ul>
+      <div class="note">高度依賴特定私有工具 <code>ai-hero-cli</code>，是針對 Matt 個人課程 repo 的工作流程，通用性低——這大概也是它被放在 misc 的原因。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">setup-pre-commit</span><span class="badge model">MODEL-INVOKED</span><span class="tagline">設定完整 pre-commit 管線：Husky + lint-staged + typecheck + test</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>在目前 repo 中設定完整的 pre-commit 管線：Husky + lint-staged（跑 Prettier 格式化 staged 檔案）+ typecheck + test。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想加 pre-commit hooks、設定 Husky、配置 lint-staged、或在 commit 時做格式化/型別檢查/測試時。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>依 lockfile 偵測 package manager（npm/pnpm/yarn/bun），不確定時預設 npm。</li>
+        <li>安裝 <code>husky lint-staged prettier</code>，寫 <code>.husky/pre-commit</code>：<code>lint-staged</code> → <code>typecheck</code> → <code>test</code>；package.json 沒有對應 script 就省略該行。</li>
+        <li>僅在無 Prettier 設定時才建立 <code>.prettierrc</code>。</li>
+        <li>最後以 commit 收尾——commit 本身會走新 hook，等同 smoke test。</li>
+      </ul>
+      <div class="note">執行順序刻意把快速的 lint-staged（只處理 staged 檔）放最前面，再跑完整的 typecheck 和測試。</div>
+    </div>
+  </details>
+</section>
+
+<!-- ==================== IN-PROGRESS ==================== -->
+<section class="bucket">
+  <h2>in-progress（6 個）</h2>
+  <p class="bucket-desc">Beta 區：刻意公開試用但不收錄在 plugin 與頂層 README，可能隨時變更或消失。全部為 user-invoked。安裝需直接指定：<code>npx skills@latest add mattpocock/skills --skill=&lt;name&gt;</code>。</p>
+
+  <details class="skill">
+    <summary><span class="name">claude-handoff</span><span class="badge user">USER-INVOKED</span><span class="tagline">把對話直接交接給全新的背景 agent（claude --bg）</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把目前的對話交接給一個全新的背景 agent，讓它立刻接手繼續工作。先產生 handoff summary，但不存檔，而是直接作為 prompt 用 <code>claude --bg --name "&lt;名稱&gt;" "&lt;summary&gt;"</code> 啟動背景 agent。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想把目前對話的工作無縫移交給下一個 session／背景 agent 時手動觸發。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>以 <code>claude --bg</code> 啟動，立即返回，在目前工作目錄中運行；使用者用 <code>claude agents</code> 管理。</li>
+        <li>一定要加 <code>--name</code> 給描述性名稱。</li>
+        <li>Summary 必須包含 "suggested skills" 區段；不重複已在其他產物中的內容，用路徑或 URL 引用；必須遮蔽敏感資訊。</li>
+      </ul>
+      <div class="note">與 productivity 的 <code>handoff</code> 差異：交接的載體是「新 agent 的 prompt」而非一份文件。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">loop-me</span><span class="badge user">USER-INVOKED</span><span class="tagline">跨 session 把你腦中的工作流程逼問成可實作的 spec</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>在目前目錄中跑一個有狀態的 grilling session，跨多次對話把使用者腦中的「工作流程」逐步逼問成可直接實作的 spec。以「loop」（人生中反覆出現的模式）為切入視角，找出值得委派給 workflow 的循環。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想設計自動化工作流程、或想被追問以釐清自己生活中有哪些可委派的 loop 時手動觸發。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>沿用 <code>/grilling</code> 的紀律：無情追問、一次一輪問題、每題附建議答案。</li>
+        <li>Workspace 結構：<code>workflows/*.md</code>（每個 workflow 一份 spec，為 source of truth）＋ <code>NOTES.md</code>（使用者世界的原始筆記）。</li>
+        <li>詞彙集（Trigger / Checkpoint / Push right / Brief）是共享語言，只在 workflow 需要時才拿出來用。</li>
+        <li>「Push right」原則：把人類 checkpoint 盡量往後推，先把工作做完，最後一次、準備齊全地問人類。</li>
+        <li>Definition of done：spec 完成到「實作者 agent 不用再問任何一個問題就能動手」為止。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">setup-ts-deep-modules</span><span class="badge user">USER-INVOKED</span><span class="tagline">用 dependency-cruiser 強制 TS repo 的 deep module 邊界</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>把 dependency-cruiser 接進一個 TypeScript repo，強制每個 package 成為 deep module——實作藏在子資料夾，外部只能透過 package 根層的 entry-point 檔案存取，測試也必須經由 entry point 驗證。安裝工具、寫好規則，並實際驗證規則會咬人。</p>
+      <h4>觸發時機</h4>
+      <p>使用者想在 TS repo 建立/強制「deep module」套件邊界規範時手動觸發。詞彙來自 <code>/codebase-design</code> skill。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>7 個步驟，每步都有 "Done when" 完成條件：偵測環境 → 安裝 dependency-cruiser → 複製即用 config → 加 <code>lint:boundaries</code> script → 建 example 範例套件 → 證明規則會咬人（pass → 故意 fail → 還原 pass）→ 寫 README 與 agent 指引。</li>
+        <li>四條核心規則（皆 error）：entry-point boundary、intra-package freedom、tests through entry points、no cycles。</li>
+        <li>公私分界由路徑深度決定（根層檔 = public、任何子資料夾 = private）；明確反對 barrel file。</li>
+        <li>隨附 <code>dependency-cruiser.config.cjs</code> 即用模板（用 <code>.cjs</code> 以相容 <code>"type": "module"</code> repo）。</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">writing-beats</span><span class="badge user">USER-INVOKED</span><span class="tagline">寫作 exploit 階段：把素材組裝成 choose-your-own-adventure 式的 beat 之旅</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>寫作流程的 exploit（收斂）階段——探索已完成、素材堆固定，把素材組裝成一段「beat 之旅」：先選一個起始 beat、只寫那一個 beat、再從當下位置轉向下一個，直到文章自然結束。</p>
+      <h4>觸發時機</h4>
+      <p>使用者傳入一份 markdown 原始素材檔，想把它寫成文章時手動觸發。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>先確定 prerequisites（讀者進門已懂的概念）；其餘概念必須先被某個 beat 落地（ground）之後才能被依賴。</li>
+        <li>提出 2–3 個候選起始 beat 讓使用者選，並預告該選擇會解鎖哪些後續 beat。</li>
+        <li>一次只寫一個 beat；每次寫入前重新從磁碟讀取文章檔，絕對保留使用者的手動編輯。</li>
+        <li>素材堆是 quarry（可改寫、拆分、重組）；文章在旅程完成時結束，而非素材用完時。</li>
+      </ul>
+      <div class="note">核心機制是 Grounding——每個概念必須先落地才能被依賴。最大的槓桿是「哪些設為 prerequisite、哪些在文內落地」。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">writing-fragments</span><span class="badge user">USER-INVOKED</span><span class="tagline">寫作 explore 階段：訪談挖掘寫作原石，不做任何結構規劃</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>寫作流程的 explore（探索）階段——透過 grilling 訪談把使用者腦中的「fragment」（異質的寫作原石：一句利落的話、一則小場景、半個想法、一段引文等）不斷挖出來，逐條 append 到單一 markdown 文件，作為日後文章的原料。此階段不做任何結構規劃。</p>
+      <h4>觸發時機</h4>
+      <p>使用者有一個想寫的主題、想被追問挖掘素材時手動觸發。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>對話中浮現的 fragment 都即時 append 到檔案，從使用者的第一句話就開始捕捉。</li>
+        <li>檔案格式：開頭只有一個 H1 工作標題，fragment 之間用 <code>---</code> 分隔，無標題無標籤、順序即加入順序。</li>
+        <li>最有價值的 fragment 是 leading word（能撐起整篇文章的緊湊隱喻或造詞，如 tracer bullets、fog of war）。</li>
+        <li>靜默 append：不逐條徵求同意；每次寫入前重讀檔案，保留使用者編輯。</li>
+        <li>使用者可隨時下「cut the last one」「merge those two」等指令，視為一等指令。</li>
+      </ul>
+      <div class="note">explore 與 exploit 嚴格分離——探索階段只管擴大素材空間，承諾結構是 writing-shape / writing-beats 的工作。</div>
+    </div>
+  </details>
+
+  <details class="skill">
+    <summary><span class="name">writing-shape</span><span class="badge user">USER-INVOKED</span><span class="tagline">寫作 exploit 階段：逐段塑造文章，每個 block 的格式都要論證</span></summary>
+    <div class="body">
+      <h4>用途</h4>
+      <p>另一種 exploit（收斂）寫作 skill——把一份原始素材檔（可以是 fragment 清單、無結構散文、甚至逐字稿）逐段塑造成一篇文章，每個 block 的格式選擇（散文 vs. 列表 vs. 表格 vs. callout vs. 引用 vs. code block）都要拿出來與使用者論證。原始素材檔對此 skill 是唯讀的。</p>
+      <h4>觸發時機</h4>
+      <p>使用者傳入一份 markdown 原始素材，想逐段塑造成文章時手動觸發。</p>
+      <h4>工作流程 / 特色</h4>
+      <ul>
+        <li>起草 2–3 個候選開頭（各自暗示不同的論點／角度），逼使用者選一個或拼出混合版。</li>
+        <li>逐段生長：不斷問「有了這個開頭，讀者接下來需要聽到什麼？」；每個 block 只能依賴已 grounded 的概念。</li>
+        <li>每個 block 一談妥就立即 append，不批次累積；素材堆缺料時明確指出缺口。</li>
+        <li>反向 grilling：不斷質疑「這段為讀者做了什麼上一段沒做的？」「砍掉會壞掉什麼？」「這是散文還是該用列表？」</li>
+        <li>格式論證清單：prose vs. list、inline vs. callout、table vs. 重複結構（同形狀出現 3+ 次用表格）、quote vs. paraphrase、code block vs. inline code。</li>
+      </ul>
+      <div class="note">與 writing-beats 同屬 exploit、共享 Grounding 概念，但方式不同——beats 是「節拍之旅」，shape 是線性逐段生長、以格式論證為驅動。</div>
+    </div>
+  </details>
+</section>
+
+<footer>
+  由 Kimi Code 自動研究產生 · 資料來源：各 skill 的 SKILL.md、README.md 與隨附文件 · 共 35 個 skill（engineering 18 / productivity 7 / misc 4 / in-progress 6）
+</footer>
+
+</div>
+</body>
+</html>
